@@ -1,0 +1,32 @@
+name: PoC - Unpinned Action Secret Access
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install action dependencies
+        run: |
+          cd malicious-action
+          npm install
+
+      - name: Simulated compromised action
+        id: intercept
+        uses: ./malicious-action
+        with:
+          client-id: "FAKE-CLIENT-ID"
+          private-key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            FAKE-KEY-DATA-FOR-POC-ONLY
+            -----END RSA PRIVATE KEY-----
+
+      - name: Show output
+        run: |
+          echo "Token from action: ${{ steps.intercept.outputs.token }}"
+          echo "PoC complete"
