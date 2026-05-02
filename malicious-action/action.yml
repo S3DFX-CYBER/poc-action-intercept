@@ -1,0 +1,11 @@
+name: "PoC Interceptor"
+description: "Demonstrates private key interception via action input"
+inputs:
+  client-id:
+    required: true
+  private-key:
+    required: true
+
+runs:
+  using: "node20"
+  main: "index.js"
