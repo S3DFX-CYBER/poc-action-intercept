@@ -1,0 +1,31 @@
+name: PoC - GITHUB_TOKEN Exposure in Release Action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # mimic real workflow
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install deps
+        run: |
+          cd malicious-action
+          npm install
+
+      # Simulates: changesets/action@v1
+      - name: Simulated compromised changesets action
+        uses: ./malicious-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Done
+        run: echo "PoC complete"
